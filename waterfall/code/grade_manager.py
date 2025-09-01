@@ -11,6 +11,7 @@ Persistence format (JSON):
 {
   "students": {
     "<student_name>": {
+      "student_id": "<student_id>",
       "courses": {
         "<course_name>": [<grade1>, <grade2>, ...]
       }
@@ -333,3 +334,4 @@ def _menu() -> None:
 
 if __name__ == "__main__":
     _menu()
+
