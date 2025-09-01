@@ -39,6 +39,6 @@ Each stage is committed with meaningful messages to reflect Waterfall’s linear
    git clone https://github.com/LuannePlem/StudentCourseManager-LuannePlemmons.git
    cd StudentCourseManager-LuannePlemmons/waterfall
 2. Run program in bash:
-   '''bash
+   ```bash
    python grade_manager.py
 
