@@ -32,6 +32,11 @@ Each stage is committed with meaningful messages to reflect Waterfall’s linear
 
 ===============================
 
+## UML Diagram  
+<img width="905" height="485" alt="image" src="https://github.com/user-attachments/assets/7c49e940-1ea3-4772-930e-137170e35cc2" />
+
+===============================
+
 ## How to Run the Program
 
 1. Clone the repository:
