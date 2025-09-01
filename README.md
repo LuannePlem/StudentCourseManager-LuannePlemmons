@@ -1,6 +1,6 @@
 ## StudentCourseManager-LuannePlemmons
 
-A **Python-based Student Grade Management System** implemented in **OOP style**.  
+A **Python-based Student Grade Management System** implemented in **Object Oriented Programming style (OOP)**.  
 This project follows the **Waterfall Software Development Process Model** and demonstrates how students can be managed with enrollments, courses, grades, GPA calculation, and data persistence through the use of the file students.json.  
 
 ===============================
@@ -49,8 +49,8 @@ Each stage is committed with meaningful messages to reflect Waterfall’s linear
 
 <img width="805" height="256" alt="image" src="https://github.com/user-attachments/assets/d76d687e-44ed-47ba-9227-d3a9e7225886" />
 
-Luanne Plemmons
-Dr. Vudumu
-ENCE 420 - T01: Software Engineering
-Repository created for Coding Assignment 1 
+Luanne Plemmons  
+Dr. Vudumu  
+ENCE 420 - T01: Software Engineering  
+Repository created for Coding Assignment 1  
 September 4, 2025
