@@ -41,4 +41,7 @@ Each stage is committed with meaningful messages to reflect Waterfall’s linear
 2. Run program in bash:
    ```bash
    python grade_manager.py
+3. Use the menu-driven options which should look like:
+   <img width="504" height="224" alt="image" src="https://github.com/user-attachments/assets/8222a6bd-ba77-47ca-8a14-35710ea67fba" />
+
 
