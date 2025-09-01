@@ -102,11 +102,32 @@ class Student:
         return self.courses[course_name].average()
 
     def gpa(self) -> Optional[float]:
-        # Calculate overall GPA (avg of all course averages)
-        avgs = [c.average() for c in self.courses.values() if c.average() is not None]
-        if not avgs:
+        """
+        Calculate GPA on a 4.0 scale.
+        Uses common U.S. grading scale:
+          90-100 = 4.0
+          80-89  = 3.0
+          70-79  = 2.0
+          60-69  = 1.0
+          <60    = 0.0
+        """
+        gpa_points = []
+        for c in self.courses.values():
+            avg = c.average()
+            if avg is not None:
+                if avg >= 90:
+                    gpa_points.append(4.0)
+                elif avg >= 80:
+                    gpa_points.append(3.0)
+                elif avg >= 70:
+                    gpa_points.append(2.0)
+                elif avg >= 60:
+                    gpa_points.append(1.0)
+                else:
+                    gpa_points.append(0.0)
+        if not gpa_points:
             return None
-        return sum(avgs) / len(avgs)
+        return sum(gpa_points) / len(gpa_points)
 
     def to_dict(self) -> dict:
         # Convert the student object into dictionary for saving to JSON.
