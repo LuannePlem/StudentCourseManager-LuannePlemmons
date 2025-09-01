@@ -1,0 +1,16 @@
+{
+  "students": {
+    "000300100": {
+      "name": "Luanne Plemmons",
+      "courses": {
+        "ENCE 420": [],
+        "ENCE 410": [],
+        "HON 397": [],
+        "HON 497": [],
+        "ENCE 451": [],
+        "ENGR 450": [],
+        "CON 305": []
+      }
+    }
+  }
+}
