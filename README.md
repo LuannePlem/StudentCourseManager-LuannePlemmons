@@ -30,7 +30,7 @@ This project was developed in **sequential stages**:
 
 Each stage is committed with meaningful messages to reflect Waterfall’s linear flow.
 
----
+===============================
 
 ## How to Run the Program
 
@@ -45,4 +45,11 @@ Each stage is committed with meaningful messages to reflect Waterfall’s linear
    
    <img width="504" height="224" alt="image" src="https://github.com/user-attachments/assets/8222a6bd-ba77-47ca-8a14-35710ea67fba" />
 
+===============================
 
+<img width="805" height="256" alt="image" src="https://github.com/user-attachments/assets/d76d687e-44ed-47ba-9227-d3a9e7225886" />
+Luanne Plemmons
+Dr. Vudumu
+ENCE 420 - T01: Software Engineering
+Repository created for Coding Assignment 1 
+September 4, 2025
