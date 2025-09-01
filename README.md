@@ -1,11 +1,11 @@
-**StudentCourseManager-LuannePlemmons
+## StudentCourseManager-LuannePlemmons
 
 A **Python-based Student Grade Management System** implemented in **OOP style**.  
 This project follows the **Waterfall Software Development Process Model** and demonstrates how students can be managed with enrollments, courses, grades, GPA calculation, and data persistence through the use of the file students.json.  
 
 ===============================
 
-## 📌 Features
+## Features
 - Add and remove students  
 - Enroll a student in one or more courses  
 - Remove a course from a student  
@@ -18,7 +18,7 @@ This project follows the **Waterfall Software Development Process Model** and de
 
 ===============================
 
-## 🧭 Process Model: Waterfall
+## Process Model: Waterfall
 
 This project was developed in **sequential stages**:
 
@@ -32,7 +32,7 @@ Each stage is committed with meaningful messages to reflect Waterfall’s linear
 
 ---
 
-## ⚙️ How to Run the Program
+## How to Run the Program
 
 1. Clone the repository:
    ```bash
