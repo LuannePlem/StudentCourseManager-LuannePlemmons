@@ -1,16 +1,18 @@
+# grade_manager.py
 """
 Student Grade Management System (Waterfall - OOP, Menu-driven)
 Author: Luanne Plemmons (with help from ChatGPT)
 
 Classes:
 - Course: holds a course name and multiple numeric grades for a student.
-- Student: holds name and mapping of course_name -> Course.
+- Student: holds student_id, name, mapping of course_name -> Course.
 - GradeManager: orchestrates student operations and JSON persistence.
 
 Persistence format (JSON):
 {
   "students": {
-    "<student_name>": {
+    "<student_id>": {
+      "name": "<name>",
       "courses": {
         "<course_name>": [<grade1>, <grade2>, ...]
       }
@@ -27,7 +29,7 @@ from typing import Dict, List, Optional
 # Class: Course
 # ----------------------------
 # Represents a single course that a student is enrolled in.
-# Each course has a name and a list of grades for that student.
+# Each course has a name and a list of grades for that student
 class Course:
     def __init__(self, name: str):
         self.name = name # Name the course the name given by user
@@ -65,16 +67,14 @@ class Course:
         avg_str = f"{avg:.2f}" if avg is not None else "N/A"
         return f"{self.name}: grades={self.grades} avg={avg_str}"
 
-
 # -------------------
 # Class: Student
 # -------------------
-# Represents a student with an name, ID, and a set of courses
-# Student is called by name
+# Represents a student with an ID, name, and a set of courses
 class Student:
-    def __init__(self, name: str, student_id: str):
-        self.name = name
+    def __init__(self, student_id: str, name: str):
         self.student_id = student_id
+        self.name = name
         self.courses: Dict[str, Course] = {} # Dictionary: name -> course object
 
     def enroll_course(self, course_name: str) -> None:
@@ -132,22 +132,20 @@ class Student:
     def to_dict(self) -> dict:
         # Convert the student object into dictionary for saving to JSON.
         return {
-            "student_id": self.student_id, # Need to make sure student_id is saved
+            "name": self.name,
             "courses": {name: c.to_dict() for name, c in self.courses.items()}
         }
 
     @staticmethod
-    def from_dict(name: str, data: dict) -> "Student":
-        # pull student_id from JSON, default to "N/A" if missing (for backward compatibility)
-        s = Student(name, data["student_id"])
+    def from_dict(student_id: str, data: dict) -> "Student":
+        # Rebuild Student object from dictionary (JSON)
+        s = Student(student_id, data["name"])
         for cname, grades in data.get("courses", {}).items():
             s.courses[cname] = Course.from_list(cname, grades)
         return s
 
-
     def __repr__(self) -> str:
-        return f"Student(name={self.name!r}, courses={list(self.courses)})"
-
+        return f"Student(id={self.student_id!r}, name={self.name!r}, courses={list(self.courses)})"
 
 # ----------------------------
 # Class: GradeManager
@@ -155,61 +153,59 @@ class Student:
 # Manages all students and provides menu-driven interface
 class GradeManager:
     def __init__(self):
-        self.students: Dict[str, Student] = {}  # key = name
+        self.students: Dict[str, Student] = {} # student_id -> student object
 
     # -------------------
     # Student Management
     # -------------------
-    def add_student(self, name: str, student_id: str) -> None:
+    def add_student(self, student_id: str, name: str) -> None:
         # Add student if ID does not exist in dictionary
-        if name in self.students:
-            raise ValueError(f"Student '{name}' already exists.")
-        self.students[name] = Student(name, student_id)
+        if student_id in self.students:
+            raise ValueError(f"Student with ID '{student_id}' already exists.")
+        self.students[student_id] = Student(student_id, name)
 
-    def remove_student(self, name: str) -> None:
+    def remove_student(self, student_id: str) -> None:
         # Remove student if ID does exist in dictionary
-        if name not in self.students:
-            raise ValueError(f"Student '{name}' not found.")
-        del self.students[name]
+        if student_id not in self.students:
+            raise ValueError(f"Student with ID '{student_id}' not found.")
+        del self.students[student_id]
 
     # -------------------
     # Course Options
     # -------------------
-    def enroll_student_in_course(self, name: str, course_name: str) -> None:
+    def enroll_student_in_course(self, student_id: str, course_name: str) -> None:
         # Uses student object to enroll
-        self._get_student(name).enroll_course(course_name)
+        self._get_student(student_id).enroll_course(course_name)
 
-    def remove_course_from_student(self, name: str, course_name: str) -> None:
+    def remove_course_from_student(self, student_id: str, course_name: str) -> None:
         # Uses student object to remove course
-        self._get_student(name).remove_course(course_name)
+        self._get_student(student_id).remove_course(course_name)
 
-    def add_grade(self, name: str, course_name: str, grade: float) -> None:
+    def add_grade(self, student_id: str, course_name: str, grade: float) -> None:
         # Uses Student object to add grade
-        self._get_student(name).add_grade(course_name, grade)
+        self._get_student(student_id).add_grade(course_name, grade)
 
-    def course_average(self, name: str, course_name: str) -> Optional[float]:
+    def course_average(self, student_id: str, course_name: str) -> Optional[float]:
         # Gets course average
-        return self._get_student(name).course_average(course_name)
+        return self._get_student(student_id).course_average(course_name)
 
-    def student_gpa(self, name: str) -> Optional[float]:
+    def student_gpa(self, student_id: str) -> Optional[float]:
         # Gets student GPA
-        return self._get_student(name).gpa()
+        return self._get_student(student_id).gpa()
 
     # ---------------------
     # Display methods
     # ---------------------
-    def display_student(self, name: str) -> str:
+    def display_student(self, student_id: str) -> str:
         # Print one student's info, their courses, and grades.
-        s = self._get_student(name)
-        lines = [f"Name: {s.name}", f"Student ID: {s.student_id}"]
+        s = self._get_student(student_id)
+        lines = [f"ID: {s.student_id} | Name: {s.name}"]
         if not s.courses:
             lines.append("  (no courses)")
-        else:
-            for cname in sorted(s.courses):
-                course = s.courses[cname]
-                avg = course.average()
-                avg_str = f"{avg:.2f}" if avg is not None else "N/A"
-                lines.append(f"  - {cname}: grades={course.grades} | avg={avg_str}")
+        for cname, course in s.courses.items():
+            avg = course.average()
+            avg_str = f"{avg:.2f}" if avg is not None else "N/A"
+            lines.append(f"  - {cname}: grades={course.grades} | avg={avg_str}")
         g = s.gpa()
         gpa_str = f"{g:.2f}" if g is not None else "N/A"
         lines.append(f"  Overall GPA: {gpa_str}")
@@ -219,7 +215,7 @@ class GradeManager:
         # Print all students and their info if it exists
         if not self.students:
             return "(no students)"
-        return "\n\n".join([self.display_student(name) for name in sorted(self.students)])
+        return "\n\n".join([self.display_student(sid) for sid in sorted(self.students)])
 
     # -----------------------
     # Persistence (Save/Load)
@@ -227,8 +223,8 @@ class GradeManager:
     def save_json(self, path: str) -> None:
         # Save all student data to JSON file.
         data = {
-            "students": {name: s.to_dict() for name, s in sorted(self.students.items())}
-        }# Places it into a dictionary
+            "students": {sid: s.to_dict() for sid, s in self.students.items()}
+        } # Places it into a dictionary
         with open(path, "w", encoding="utf-8") as f:
             json.dump(data, f, indent=2) # Adds to file
 
@@ -236,23 +232,19 @@ class GradeManager:
         with open(path, "r", encoding="utf-8") as f:
             data = json.load(f)
         self.students.clear()
-        for name, sdict in data.get("students", {}).items():
-            self.students[name] = Student.from_dict(name, sdict)
+        for sid, sdict in data.get("students", {}).items():
+            self.students[sid] = Student.from_dict(sid, sdict)
 
-    def _get_student(self, name: str) -> Student:
-        if name not in self.students:
-            raise ValueError(f"Student '{name}' not found.")
-        return self.students[name]
+    def _get_student(self, student_id: str) -> Student:
+        if student_id not in self.students:
+            raise ValueError(f"Student with ID '{student_id}' not found.")
+        return self.students[student_id]
 
-
-# Helpers
-# String prompt
-# Takes prompt and makes it a stripped string.
+# Takes prompt and makes it a stripped string
 def _prompt(msg: str) -> str:
     return input(msg).strip()
 
-# Float prompt
-# If the number is not a float, the error is given to user.
+# If the number is not a float, the error is given to user
 def _prompt_float(msg: str) -> float:
     while True:
         try:
@@ -260,14 +252,13 @@ def _prompt_float(msg: str) -> float:
         except ValueError:
             print("Please enter a valid number.")
 
-
 # ---------------
 # Main Program (Menu-driven)
 # ---------------
 def _menu() -> None:
     gm = GradeManager()
     FILENAME = "students.json"
-
+    
     while True:
         print("\n======== Student Grade Management System ========")
         print("1. Add student")
@@ -284,34 +275,34 @@ def _menu() -> None:
         choice = _prompt("Select an option (1-10): ")
         try:
             if choice == "1":
+                sid = _prompt("Enter student ID: ")
                 name = _prompt("Enter student name: ")
-                student_id = _prompt("Enter student ID: ")
-                gm.add_student(name, student_id)
-                print(f"Student {name} added.")
+                gm.add_student(sid, name)
+                print("Student added.")
             elif choice == "2":
-                name = _prompt("Enter student name: ")
-                gm.remove_student(name)
-                print(f"Student {name} removed.")
+                sid = _prompt("Enter student ID: ")
+                gm.remove_student(sid)
+                print("Student removed.")
             elif choice == "3":
-                name = _prompt("Enter student name: ")
+                sid = _prompt("Enter student ID: ")
                 course = _prompt("Enter course name: ")
-                gm.enroll_student_in_course(name, course)
-                print(f"Student {name} entered in {course}.")
+                gm.enroll_student_in_course(sid, course)
+                print("Course enrolled.")
             elif choice == "4":
-                name = _prompt("Enter student name: ")
+                sid = _prompt("Enter student ID: ")
                 course = _prompt("Enter course name: ")
-                gm.remove_course_from_student(name, course)
-                print(f"Course {course} removed from student {name}.")
+                gm.remove_course_from_student(sid, course)
+                print("Course removed from student.")
             elif choice == "5":
-                name = _prompt("Enter student name: ")
+                sid = _prompt("Enter student ID: ")
                 course = _prompt("Enter course name: ")
                 grade = _prompt_float("Enter grade (numeric): ")
-                gm.add_grade(name, course, grade)
-                avg = gm.course_average(name, course)
-                print(f"Grade added for {name}. {course} average now: {avg:.2f}" if avg is not None else "Grade added.")
+                gm.add_grade(sid, course, grade)
+                avg = gm.course_average(sid, course)
+                print(f"Grade added. {course} average now: {avg:.2f}" if avg is not None else "Grade added.")
             elif choice == "6":
-                name = _prompt("Enter student name: ")
-                print(gm.display_student(name))
+                sid = _prompt("Enter student ID: ")
+                print(gm.display_student(sid))
             elif choice == "7":
                 print(gm.display_all())
             elif choice == "8":

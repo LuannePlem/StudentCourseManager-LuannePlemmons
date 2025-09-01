@@ -1,15 +1,23 @@
 {
   "students": {
-    "000300100": {
-      "name": "Luanne Plemmons",
+    "Luanne Plemmons": {
+      "student_id": "000300100",
       "courses": {
-        "ENCE 420": [],
-        "ENCE 410": [],
-        "HON 397": [],
-        "HON 497": [],
+        "CON 305": [
+          96.77
+        ],
+        "ENGR 450": [
+          83.23
+        ],
         "ENCE 451": [],
-        "ENGR 450": [],
-        "CON 305": []
+        "ENCE 410": [],
+        "ENCE 420": [],
+        "HON 397": [
+          92.21
+        ],
+        "HON 497": [
+          98.91
+        ]
       }
     }
   }
